@@ -1,0 +1,34 @@
+﻿<UserControl x:Class="PublicLibrary.Controls.CustomerListControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PublicLibrary.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8">
+            <Button Content="New" />
+        </StackPanel>
+        <ListView Grid.Row="1" ItemsSource="{Binding Customers}" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Number}" Header="Number" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Gender}" Header="Gender" />
+                    <GridViewColumn DisplayMemberBinding="{Binding NameSet}" Header="NameSet" />
+                    <GridViewColumn DisplayMemberBinding="{Binding GivenName}" Header="GivenName" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Surname}" Header="Surname" />
+                    <GridViewColumn DisplayMemberBinding="{Binding StreetAddress}" Header="StreetAddress" />
+                    <GridViewColumn DisplayMemberBinding="{Binding ZipCode}" Header="ZipCode" />
+                    <GridViewColumn DisplayMemberBinding="{Binding EmailAddress}" Header="EmailAddress" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Username}" Header="Username" />
+                    <GridViewColumn DisplayMemberBinding="{Binding TelephoneNumber}" Header="TelephoneNumber" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>
