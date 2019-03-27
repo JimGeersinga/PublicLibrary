@@ -83,7 +83,17 @@
       <DependentUpon>BookItemListControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\IControl.cs" />
+    <Compile Include="Controls\LoanDialog.xaml.cs">
+      <DependentUpon>LoanDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\OkDialog.xaml.cs">
+      <DependentUpon>OkDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BookItem.cs" />
     <Compile Include="Services\LibraryService.cs" />
+    <Compile Include="ValidationRules\NotEmptyValidationRule.cs" />
+    <Compile Include="ViewModels\LoanDialogViewModel.cs" />
+    <Compile Include="ViewModels\OkDialogViewModel.cs" />
     <Page Include="Controls\BookItemListControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -96,7 +106,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\LoanDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\LoanListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\OkDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -111,6 +129,7 @@
     <Compile Include="Controls\BookListControl.xaml.cs">
       <DependentUpon>BookListControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\BookItemListViewModel.cs" />
     <Compile Include="ViewModels\BookListViewModel.cs" />
     <Compile Include="Controls\CustomerListControl.xaml.cs">
       <DependentUpon>CustomerListControl.xaml</DependentUpon>

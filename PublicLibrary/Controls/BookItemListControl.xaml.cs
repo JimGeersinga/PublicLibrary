@@ -4,8 +4,8 @@ namespace PublicLibrary.Controls
 {
     public partial class BookItemListControl : UserControl, IControl
     {
-        private BookListViewModel _viewModel;
-        public BookListViewModel ViewModel
+        private BookItemListViewModel _viewModel;
+        public BookItemListViewModel ViewModel
         {
             get => _viewModel;
             set
@@ -18,7 +18,7 @@ namespace PublicLibrary.Controls
         public BookItemListControl()
         {
             InitializeComponent();
-            ViewModel = new BookListViewModel();
+            ViewModel = new BookItemListViewModel();
         }
 
         public void Reload()

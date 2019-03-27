@@ -1,5 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using PublicLibrary.Controls;
@@ -26,19 +27,22 @@ namespace PublicLibrary
 
         public MainViewModel()
         {
-            SelectedPage = new BookListControl();
+            SelectedPage = new CustomerListControl();
         }
 
         public ICommand SwitchPageCommand { get { return new RelayCommand<string>(OnSwitchPage); } }
-        public void OnSwitchPage(string page)
+        public async void OnSwitchPage(string page)
         {
             switch (page)
             {
+                case "customers":
+                    SelectedPage = new CustomerListControl();
+                    break;
                 case "books":
                     SelectedPage = new BookListControl();
                     break;
-                case "customers":
-                    SelectedPage = new CustomerListControl();
+                case "bookitems":
+                    SelectedPage = new BookItemListControl();
                     break;
                 case "loans":
                     SelectedPage = new LoanListControl();
@@ -49,43 +53,65 @@ namespace PublicLibrary
         }
 
         public ICommand ImportCustomersCommand { get { return new RelayCommand(OnImportCustomers); } }
-        public void OnImportCustomers()
+        public async void OnImportCustomers()
         {
             OpenFileDialog fileDialog = new OpenFileDialog
             {
                 DefaultExt = ".json", // Required file extension 
-                Filter = "Json documenten (.json)|*.json" // Optional file extensions
+                Filter = "Customers (.json)|*.json" // Optional file extensions
             };
 
             if (fileDialog.ShowDialog() == true)
             {
-                string content = File.ReadAllText(fileDialog.FileName);
-                List<Customer> customers = JsonConvert.DeserializeObject<List<Customer>>(content);
-                App.LibraryService.Customers = customers;
-                SelectedPage.Reload();
+                try
+                {
+                    string content = File.ReadAllText(fileDialog.FileName);
+                    List<Customer> customers = JsonConvert.DeserializeObject<List<Customer>>(content);
+                    App.LibraryService.ImportCustomers(customers);
+                    SelectedPage.Reload();
+                }
+                catch (Exception)
+                {
+                    OkDialog dialog = new OkDialog()
+                    {
+                        ViewModel = new ViewModels.OkDialogViewModel("The file doesn't contain a valid customer list file format.")
+                    };
+                    await DialogHost.Show(dialog, "RootDialog");
+                }
             }
         }
 
         public ICommand ImportBooksCommand { get { return new RelayCommand(OnImportBooks); } }
-        public void OnImportBooks()
+        public async void OnImportBooks()
         {
             OpenFileDialog fileDialog = new OpenFileDialog
             {
                 DefaultExt = ".json", // Required file extension 
-                Filter = "Json documenten (.json)|*.json" // Optional file extensions
+                Filter = "Books (.json)|*.json" // Optional file extensions
             };
 
             if (fileDialog.ShowDialog() == true)
             {
-                string content = File.ReadAllText(fileDialog.FileName);
-                List<Book> books = JsonConvert.DeserializeObject<List<Book>>(content);
-                App.LibraryService.Books = books;
-                SelectedPage.Reload();
+                try
+                {
+                    string content = File.ReadAllText(fileDialog.FileName);
+                    List<Book> books = JsonConvert.DeserializeObject<List<Book>>(content);
+                    App.LibraryService.ImportBooks(books);
+                    SelectedPage.Reload();
+                }
+                catch (Exception)
+                {
+                    OkDialog dialog = new OkDialog()
+                    {
+                        ViewModel = new ViewModels.OkDialogViewModel("The file doesn't contain a valid book list file format.")
+                    };
+                    await DialogHost.Show(dialog, "RootDialog");
+                }
             }
         }
 
         public ICommand ImportDefaultsCommand { get { return new RelayCommand(OnImportDefaults); } }
-        public void OnImportDefaults()
+        public async void OnImportDefaults()
         {
             try
             {
@@ -93,8 +119,8 @@ namespace PublicLibrary
                 string contentCustomers = File.ReadAllText($"{Environment.CurrentDirectory}/Data/customers.json");
                 List<Book> books = JsonConvert.DeserializeObject<List<Book>>(contentBooks);
                 List<Customer> customers = JsonConvert.DeserializeObject<List<Customer>>(contentCustomers);
-                App.LibraryService.Books = books;
-                App.LibraryService.Customers = customers;
+                App.LibraryService.ImportBooks(books);
+                App.LibraryService.ImportCustomers(customers);
                 SelectedPage.Reload();
             }
             catch (Exception ex)
@@ -104,19 +130,19 @@ namespace PublicLibrary
         }
 
         public ICommand ImportLibraryCommand { get { return new RelayCommand(OnImportLibrary); } }
-        public void OnImportLibrary()
+        public async void OnImportLibrary()
         {
             SelectedPage.Reload();
         }
 
         public ICommand ExportLibraryCommand { get { return new RelayCommand(OnExportLibrary); } }
-        public void OnExportLibrary()
+        public async void OnExportLibrary()
         {
             SelectedPage.Reload();
         }
 
         public ICommand ClearCommand { get { return new RelayCommand(OnClear); } }
-        public void OnClear()
+        public async void OnClear()
         {
             App.LibraryService = new LibraryService();
             SelectedPage.Reload();

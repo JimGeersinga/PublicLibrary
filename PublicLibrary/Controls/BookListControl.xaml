@@ -17,6 +17,7 @@
         <ListView Grid.Row="1" ItemsSource="{Binding Books}" ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <ListView.View>
                 <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Id}" Header="Id" />
                     <GridViewColumn DisplayMemberBinding="{Binding Author}" Header="Author" />
                     <GridViewColumn DisplayMemberBinding="{Binding Country}" Header="Country" />
                     <GridViewColumn DisplayMemberBinding="{Binding ImageLink}" Header="ImageLink" />

@@ -14,12 +14,14 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8">
             <Button Content="New" />
         </StackPanel>
-        <ListView Grid.Row="1" ItemsSource="{Binding Books}" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+        <ListView Grid.Row="1" ItemsSource="{Binding BookItems}" ScrollViewer.HorizontalScrollBarVisibility="Auto">
             <ListView.View>
                 <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding Id}" Header="Id" />
                     <GridViewColumn DisplayMemberBinding="{Binding Book.Title}" Header="Book" />
                     <GridViewColumn DisplayMemberBinding="{Binding ISBN}" Header="ISBN" />
                     <GridViewColumn DisplayMemberBinding="{Binding Supplied}" Header="Supplied" />
+                    <GridViewColumn DisplayMemberBinding="{Binding Loan.Customer.GivenName}" Header="Borrower" />
                 </GridView>
             </ListView.View>
         </ListView>
