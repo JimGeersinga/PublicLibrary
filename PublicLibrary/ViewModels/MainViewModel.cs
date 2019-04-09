@@ -14,20 +14,12 @@ namespace PublicLibrary
 {
     public class MainViewModel : ViewModelBase
     {
-        private IControl _selectedPage;
-        public IControl SelectedPage
-        {
-            get => _selectedPage;
-            set
-            {
-                _selectedPage = value;
-                RaisePropertyChanged();
-            }
-        }
+        public IControl SelectedPage { get; set; }
 
         public MainViewModel()
         {
             SelectedPage = new CustomerListControl();
+            OnImportDefaults();
         }
 
         public ICommand SwitchPageCommand { get { return new RelayCommand<string>(OnSwitchPage); } }

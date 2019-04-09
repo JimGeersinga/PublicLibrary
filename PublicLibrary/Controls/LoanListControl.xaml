@@ -14,9 +14,28 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8">
             <Button Content="New" />
         </StackPanel>
-        <ListView Grid.Row="1" ItemsSource="{Binding Loans}" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+        <ListView x:Name="LoanList" Grid.Row="1" ItemsSource="{Binding Loans}" SelectionMode="Multiple" >
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MaterialDesignGridViewItem}">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                </Style>
+            </ListBox.ItemContainerStyle>
             <ListView.View>
                 <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <CheckBox 
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView }}, Path=DataContext.SelectCommand}" 
+                                    IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView }}, Path=DataContext.IsSelectAll}" />
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Id}" Header="Id" />
                     <GridViewColumn DisplayMemberBinding="{Binding Book.Title}" Header="Book" />
                     <GridViewColumn DisplayMemberBinding="{Binding Customer.GivenName}" Header="Customer" />

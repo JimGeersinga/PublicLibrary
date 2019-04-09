@@ -1,9 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using GalaSoft.MvvmLight;
+using Newtonsoft.Json;
+using System.ComponentModel;
 
 namespace PublicLibrary.Models
 {
-    public class Customer
+    public class Customer : ViewModelBase
     {
+        [JsonIgnore]
+        public bool IsSelected { get; set; }
+
         [JsonProperty("id", Required = Required.Always)]
         public long Id { get; set; }
 

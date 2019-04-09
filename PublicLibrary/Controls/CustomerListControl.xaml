@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PublicLibrary.Controls"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -12,11 +13,32 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8">
-            <Button Content="New" />
+            <Button Content="New" Margin="0,0,8,0" Command="{Binding CreateCommand}"/>
+            <Button Content="Edit" Margin="0,0,8,0" Command="{Binding EditCommand}"/>
+            <Button Content="Delete" Margin="0,0,8,0" Command="{Binding DeleteCommand}" />
         </StackPanel>
-        <ListView Grid.Row="1" ItemsSource="{Binding Customers}" >
+        <ListView x:Name="CustomerList" Grid.Row="1" ItemsSource="{Binding Customers}" SelectionMode="Multiple" >
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource MaterialDesignGridViewItem}">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                </Style> 
+            </ListBox.ItemContainerStyle>
             <ListView.View>
                 <GridView>
+                    <GridViewColumn>
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <CheckBox 
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView }}, Path=DataContext.SelectCommand}" 
+                                    IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListView }}, Path=DataContext.IsSelectAll}" />
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn DisplayMemberBinding="{Binding Id}" Header="Id" />
                     <GridViewColumn DisplayMemberBinding="{Binding Gender}" Header="Gender" />
                     <GridViewColumn DisplayMemberBinding="{Binding NameSet}" Header="NameSet" />

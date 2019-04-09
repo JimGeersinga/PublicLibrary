@@ -1,22 +1,17 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using PublicLibrary.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace PublicLibrary
 {
     public class BookItemListViewModel : ViewModelBase
     {
-        private ObservableCollection<BookItem> _bookItems;
-        public ObservableCollection<BookItem> BookItems
-        {
-            get => _bookItems;
-            set
-            {
-                _bookItems = value;
-                RaisePropertyChanged();
-            }
-        }
+        public bool IsSelectAll { get; set; }
+
+        public ObservableCollection<BookItem> BookItems { get; set; }
 
         public BookItemListViewModel()
         {
@@ -37,6 +32,15 @@ namespace PublicLibrary
                 item.Loan = loan;
             }
             BookItems = new ObservableCollection<BookItem>(items);
+        }
+
+        public ICommand SelectCommand => new RelayCommand(OnSelected);
+        public async void OnSelected()
+        {
+            for (int i = 0; i < BookItems.Count; i++)
+            {
+                BookItems[i].IsSelected = IsSelectAll;
+            }
         }
     }
 }

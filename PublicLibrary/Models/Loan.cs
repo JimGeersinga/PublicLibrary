@@ -1,10 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using GalaSoft.MvvmLight;
+using Newtonsoft.Json;
 using System;
 
 namespace PublicLibrary.Models
 {
-    public class Loan
+    public class Loan: ViewModelBase
     {
+        [JsonIgnore]
+        public bool IsSelected { get; set; }
+
         [JsonProperty("id")]
         public long Id { get; set; }
 
