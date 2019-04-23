@@ -7,34 +7,43 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:validator="clr-namespace:PublicLibrary.ValidationRules"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" Background="White"
+              >
     <Grid Margin="16">
 
         <Grid.RowDefinitions>
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
-            <RowDefinition />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TextBlock>New loan:</TextBlock>
-        <TextBox materialDesign:HintAssist.Hint="Name" Style="{DynamicResource MaterialDesignFloatingHintTextBox}"                 
-                 Margin="0 6 0 0"
-                 FontSize="18" Grid.Row="1">
-            <TextBox.Text>
-                <Binding Path="Name" UpdateSourceTrigger="PropertyChanged">
-                    <Binding.ValidationRules>
-                        <validator:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
-                    </Binding.ValidationRules>
-                </Binding>
-            </TextBox.Text>
-        </TextBox>
-        <TextBox materialDesign:HintAssist.Hint="Number" Style="{DynamicResource MaterialDesignFloatingHintTextBox}"
-                 Margin="0 8 0 0"
-                 FontSize="16" Grid.Row="2"
-                 />
+        <Label FontSize="20" FontWeight="Bold" HorizontalAlignment="Center">NEW LOAN</Label>
+
+        <ComboBox Grid.Row="1" IsEditable="True" Margin="0 16 0 0" 
+                  materialDesign:HintAssist.Hint="Book item" 
+                  DisplayMemberPath="Info"
+                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                  ItemsSource="{Binding BookItems}" SelectedItem="{Binding Loan.BookItem}">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        <ComboBox Grid.Row="2" IsEditable="True" Margin="0 16 0 0" 
+                  materialDesign:HintAssist.Hint="Customer" 
+                  DisplayMemberPath="Username"
+                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                  ItemsSource="{Binding Customers}" SelectedItem="{Binding Loan.Customer}">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+
         <StackPanel Orientation="Horizontal" Grid.Row="3"
-                    Margin="0 16 0 0">
+                    Margin="0 16 0 0" HorizontalAlignment="Center">
             <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
                     Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
                 <Button.CommandParameter>

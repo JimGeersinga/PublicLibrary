@@ -1,5 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using MaterialDesignThemes.Wpf;
+using PublicLibrary.Controls;
 using PublicLibrary.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -31,6 +33,22 @@ namespace PublicLibrary
                 Books[i].IsSelected = IsSelectAll;
             }
             App.LibraryService.Books = Books.ToList();
+        }
+
+        public ICommand AddBookCommand => new RelayCommand(OnAddBook);
+        public async void OnAddBook()
+        {
+            Book book = new Book();
+
+            await DialogHost.Show(new BookDialog(book), (s, e) =>
+            {
+                if (Equals(e.Parameter, true))
+                {
+                    book.Id = (App.LibraryService.Books.OrderByDescending(x => x.Id).FirstOrDefault()?.Id ?? 0) + 1;
+                    App.LibraryService.AddBook(book);
+                    Load();
+                }
+            });
         }
     }
 }

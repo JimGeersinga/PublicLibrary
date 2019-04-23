@@ -13,9 +13,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8">
-            <Button Content="New" Margin="0,0,8,0" Command="{Binding CreateCommand}"/>
-            <Button Content="Edit" Margin="0,0,8,0" Command="{Binding EditCommand}"/>
-            <Button Content="Delete" Margin="0,0,8,0" Command="{Binding DeleteCommand}" />
+            <Button Content="New" Command="{Binding AddCustomerCommand}"/>
         </StackPanel>
         <ListView x:Name="CustomerList" Grid.Row="1" ItemsSource="{Binding Customers}" SelectionMode="Multiple" >
             <ListBox.ItemContainerStyle>

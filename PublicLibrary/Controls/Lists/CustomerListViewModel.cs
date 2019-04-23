@@ -1,5 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using MaterialDesignThemes.Wpf;
+using PublicLibrary.Controls;
 using PublicLibrary.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -32,35 +34,20 @@ namespace PublicLibrary
             }
         }
 
-        public ICommand CreateCommand => new RelayCommand(OnCreate);
-        public async void OnCreate()
+        public ICommand AddCustomerCommand => new RelayCommand(OnCustomerAdd);
+        public async void OnCustomerAdd()
         {
-            for (int i = 0; i < Customers.Count; i++)
-            {
-                Customers[i].IsSelected = IsSelectAll;
-            }
-        }
+            Customer customer = new Customer();
 
-        public ICommand EditCommand => new RelayCommand(OnEdit);
-        public async void OnEdit()
-        {
-            for (int i = 0; i < Customers.Count; i++)
+            await DialogHost.Show(new CustomerDialog(customer), (s, e) =>
             {
-                Customers[i].IsSelected = IsSelectAll;
-            }
-        }
-
-        public ICommand DeleteCommand => new RelayCommand(OnDelete);
-        public async void OnDelete()
-        {
-            for (int i = Customers.Count - 1; i >= 0; i--)
-            {
-                if (Customers[i].IsSelected)
+                if (Equals(e.Parameter, true))
                 {
-                    Customers.RemoveAt(i);
+                    customer.Id = (App.LibraryService.Customers.OrderByDescending(x => x.Id).FirstOrDefault()?.Id ?? 0) + 1;
+                    App.LibraryService.AddCustomer(customer);
+                    Load();
                 }
-            }
-            App.LibraryService.Customers = Customers.ToList();
+            });
         }
     }
 }

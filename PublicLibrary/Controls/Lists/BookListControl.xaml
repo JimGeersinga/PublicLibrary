@@ -12,7 +12,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8">
-            <Button Content="New" />
+            <Button Content="New" Command="{Binding AddBookCommand}"/>
         </StackPanel>
         <ListView x:Name="BooksList" Grid.Row="1" ItemsSource="{Binding Books}" SelectionMode="Multiple" >
             <ListBox.ItemContainerStyle>

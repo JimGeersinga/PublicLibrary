@@ -24,6 +24,11 @@ namespace PublicLibrary.Models
         [JsonProperty("supplied")]
         public DateTime Supplied { get; set; }
 
+        [JsonProperty("loanId")]
+        public long? LoanId { get; set; }
+
         public Loan Loan { get; set; }
+
+        public string Info => $"{Book.Title} - {ISBN}";
     }
 }
