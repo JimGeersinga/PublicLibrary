@@ -15,11 +15,13 @@ namespace PublicLibrary.Models
         [JsonProperty("bookItemId")]
         public long BookItemId { get; set; }
 
+        [JsonIgnore]
         public BookItem BookItem { get; set; }
 
         [JsonProperty("customerId")]
         public long CustomerId { get; set; }
 
+        [JsonIgnore]
         public Customer Customer { get; set; }
 
         [JsonProperty("loanDate")]

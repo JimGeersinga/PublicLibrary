@@ -91,6 +91,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Constants.cs" />
     <Compile Include="Controls\Dialogs\BookItemDialog.xaml.cs">
       <DependentUpon>BookItemDialog.xaml</DependentUpon>
     </Compile>
@@ -111,6 +112,7 @@
       <DependentUpon>OkDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\BookItem.cs" />
+    <Compile Include="Models\Library.cs" />
     <Compile Include="Services\LibraryService.cs" />
     <Compile Include="ValidationRules\NotEmptyValidationRule.cs" />
     <Compile Include="Controls\Dialogs\CustomerDialogViewModel.cs" />

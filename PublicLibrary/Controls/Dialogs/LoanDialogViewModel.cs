@@ -19,7 +19,13 @@ namespace PublicLibrary.ViewModels
 
         public void Load()
         {
-            BookItems = new ObservableCollection<BookItem>(App.LibraryService.BookItems.Where(x => x.LoanId == null));
+            var items = App.LibraryService.BookItems.Where(x => x.LoanId == null);
+            foreach (var item in items)
+            {
+                item.Book = App.LibraryService.Books.FirstOrDefault(x => x.Id == item.BookId);               
+            }
+            BookItems = new ObservableCollection<BookItem>(items);
+
             Customers = new ObservableCollection<Customer>(App.LibraryService.Customers);
         }
     }

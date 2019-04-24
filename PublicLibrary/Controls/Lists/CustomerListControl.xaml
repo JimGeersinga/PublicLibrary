@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PublicLibrary.Controls"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -14,6 +15,26 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="8">
             <Button Content="New" Command="{Binding AddCustomerCommand}"/>
+            <materialDesign:ColorZone Mode="Standard" Padding="8 0 8 0" CornerRadius="2" Panel.ZIndex="1" Margin="16 0 0 0"
+                                      materialDesign:ShadowAssist.ShadowDepth="Depth1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Button Style="{DynamicResource MaterialDesignToolButton}">
+                        <materialDesign:PackIcon Kind="Magnify" Opacity=".56" />
+                    </Button>
+                    <TextBox Grid.Column="1" Margin="8 0 0 0"
+                             materialDesign:HintAssist.Hint="Search a customer"
+                             materialDesign:TextFieldAssist.DecorationVisibility="Hidden"
+                             BorderThickness="0"
+                             MinWidth="200"
+                             VerticalAlignment="Center"
+                             Text="{Binding Search, UpdateSourceTrigger=PropertyChanged, Delay=500}"/>
+                </Grid>
+            </materialDesign:ColorZone>
         </StackPanel>
         <ListView x:Name="CustomerList" Grid.Row="1" ItemsSource="{Binding Customers}" SelectionMode="Multiple" >
             <ListBox.ItemContainerStyle>

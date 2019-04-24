@@ -1,6 +1,7 @@
 ﻿using PublicLibrary.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PublicLibrary
 {
@@ -28,7 +29,8 @@ namespace PublicLibrary
         }
         public void ImportBooks(List<Book> items)
         {
-            for (int i = 0; i < items.Count; i++)
+            int startIndex = (int)(Books.OrderByDescending(x => x.Id).FirstOrDefault()?.Id ?? 0) + 1;
+            for (int i = startIndex; i < items.Count; i++)
             {
                 Book item = items[i];
                 item.Id = i;
@@ -63,7 +65,8 @@ namespace PublicLibrary
         }
         public void ImportCustomers(List<Customer> items)
         {
-            for (int i = 0; i < items.Count; i++)
+            int startIndex = (int)(Customers.OrderByDescending(x => x.Id).FirstOrDefault()?.Id ?? 0) + 1;
+            for (int i = startIndex; i < items.Count; i++)
             {
                 AddCustomer(items[i]);
             }
@@ -101,7 +104,7 @@ namespace PublicLibrary
         {
             DateTime start = new DateTime(1995, 1, 1);
             int range = (DateTime.Today - start).Days;
-            return start.AddDays(Random.Next(range));
+            return start.AddDays(Random.Next(range)).AddHours(Random.Next(0,23)).AddMinutes(Random.Next(0,59)).AddSeconds(Random.Next(0, 59));
         }
     }
 }

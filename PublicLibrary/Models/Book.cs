@@ -38,6 +38,7 @@ namespace PublicLibrary.Models
         [JsonProperty("year", Required = Required.AllowNull)]
         public long Year { get; set; }
 
+        [JsonIgnore]
         public List<BookItem> BookItems { get; set; }
     }
 }

@@ -19,11 +19,11 @@ namespace PublicLibrary
         public MainViewModel()
         {
             SelectedPage = new CustomerListControl();
-            OnImportDefaults();
+            //OnImportDefaults();
         }
 
-        public ICommand SwitchPageCommand { get { return new RelayCommand<string>(OnSwitchPage); } }
-        public async void OnSwitchPage(string page)
+        public ICommand SwitchPageCommand => new RelayCommand<string>(OnSwitchPage);
+        public void OnSwitchPage(string page)
         {
             switch (page)
             {
@@ -44,7 +44,7 @@ namespace PublicLibrary
             SelectedPage.Reload();
         }
 
-        public ICommand ImportCustomersCommand { get { return new RelayCommand(OnImportCustomers); } }
+        public ICommand ImportCustomersCommand => new RelayCommand(OnImportCustomers);
         public async void OnImportCustomers()
         {
             OpenFileDialog fileDialog = new OpenFileDialog
@@ -73,7 +73,7 @@ namespace PublicLibrary
             }
         }
 
-        public ICommand ImportBooksCommand { get { return new RelayCommand(OnImportBooks); } }
+        public ICommand ImportBooksCommand => new RelayCommand(OnImportBooks);
         public async void OnImportBooks()
         {
             OpenFileDialog fileDialog = new OpenFileDialog
@@ -102,7 +102,7 @@ namespace PublicLibrary
             }
         }
 
-        public ICommand ImportDefaultsCommand { get { return new RelayCommand(OnImportDefaults); } }
+        public ICommand ImportDefaultsCommand => new RelayCommand(OnImportDefaults);
         public async void OnImportDefaults()
         {
             try
@@ -115,26 +115,90 @@ namespace PublicLibrary
                 App.LibraryService.ImportCustomers(customers);
                 SelectedPage.Reload();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
+                OkDialog dialog = new OkDialog()
+                {
+                    ViewModel = new ViewModels.OkDialogViewModel("The default import failed, something went wrong.")
+                };
+                await DialogHost.Show(dialog, "RootDialog");
             }
         }
 
-        public ICommand ImportLibraryCommand { get { return new RelayCommand(OnImportLibrary); } }
+        public ICommand ImportLibraryCommand => new RelayCommand(OnImportLibrary);
         public async void OnImportLibrary()
         {
-            SelectedPage.Reload();
+            OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                DefaultExt = ".json", // Required file extension 
+                Filter = "Library (.json)|*.json" // Optional file extensions
+            };
+
+            if (fileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    string content = File.ReadAllText(fileDialog.FileName);
+                    Library library = JsonConvert.DeserializeObject<Library>(content);
+                    App.LibraryService.Customers = library.Customers;
+                    App.LibraryService.Books = library.Books;
+                    App.LibraryService.BookItems = library.BookItems;
+                    App.LibraryService.Loans = library.Loans;
+                    SelectedPage.Reload();
+                }
+                catch (Exception)
+                {
+                    OkDialog dialog = new OkDialog()
+                    {
+                        ViewModel = new ViewModels.OkDialogViewModel("The file doesn't contain a valid library file format.")
+                    };
+                    await DialogHost.Show(dialog, "RootDialog");
+                }
+            }
         }
 
-        public ICommand ExportLibraryCommand { get { return new RelayCommand(OnExportLibrary); } }
+        public ICommand ExportLibraryCommand => new RelayCommand(OnExportLibrary);
         public async void OnExportLibrary()
         {
-            SelectedPage.Reload();
+            try
+            {
+                Library library = new Library
+                {
+                    Customers = App.LibraryService.Customers,
+                    Books = App.LibraryService.Books,
+                    BookItems = App.LibraryService.BookItems,
+                    Loans = App.LibraryService.Loans
+                };
+
+                string json = JsonConvert.SerializeObject(library);
+
+                SaveFileDialog saveFileDialog = new SaveFileDialog()
+                {
+                    DefaultExt = ".json", // Required file extension 
+                    Filter = "Library (.json)|*.json", // Optional file extensions
+                    Title = "Export the library"
+                };
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    if (saveFileDialog.FileName != "")
+                    {
+                        File.WriteAllText(saveFileDialog.FileName, json);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                OkDialog dialog = new OkDialog()
+                {
+                    ViewModel = new ViewModels.OkDialogViewModel("The export failed, something went wrong.")
+                };
+                await DialogHost.Show(dialog, "RootDialog");
+            }
         }
 
-        public ICommand ClearCommand { get { return new RelayCommand(OnClear); } }
-        public async void OnClear()
+        public ICommand ClearCommand => new RelayCommand(OnClear);
+        public void OnClear()
         {
             App.LibraryService = new LibraryService();
             SelectedPage.Reload();

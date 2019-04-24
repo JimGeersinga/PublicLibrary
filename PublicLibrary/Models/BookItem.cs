@@ -16,6 +16,7 @@ namespace PublicLibrary.Models
         [JsonProperty("bookId")]
         public long BookId { get; set; }
 
+        [JsonIgnore]
         public Book Book { get; set; }
 
         [JsonProperty("isbn")]
@@ -27,8 +28,10 @@ namespace PublicLibrary.Models
         [JsonProperty("loanId")]
         public long? LoanId { get; set; }
 
+        [JsonIgnore]
         public Loan Loan { get; set; }
 
+        [JsonIgnore]
         public string Info => $"{Book.Title} - {ISBN}";
     }
 }

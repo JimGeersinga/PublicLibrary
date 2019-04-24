@@ -3,6 +3,8 @@ using GalaSoft.MvvmLight.Command;
 using MaterialDesignThemes.Wpf;
 using PublicLibrary.Controls;
 using PublicLibrary.Models;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -13,6 +15,18 @@ namespace PublicLibrary
     {
         public bool IsSelectAll { get; set; }
 
+        private string _search;
+        public string Search
+        {
+            get => _search;
+            set
+            {
+                _search = value;
+                Load();
+            }
+        }
+
+
         public ObservableCollection<BookItem> BookItems { get; set; }
 
         public BookItemListViewModel()
@@ -22,17 +36,25 @@ namespace PublicLibrary
 
         public void Load()
         {
-            var items = App.LibraryService.BookItems;
-            foreach(var item in items)
+            List<BookItem> items = App.LibraryService.BookItems;
+            foreach (BookItem item in items)
             {
-                var loan = App.LibraryService.Loans.FirstOrDefault(x => x.BookItemId == item.Id);
-                if(loan != null)
+                item.Book = App.LibraryService.Books.FirstOrDefault(x => x.Id == item.BookId);
+                item.Loan = App.LibraryService.Loans.FirstOrDefault(x => x.BookItemId == item.Id);
+                if (item.Loan != null)
                 {
-                    Customer customer = App.LibraryService.Customers.FirstOrDefault(x => x.Id == loan.CustomerId);
-                    loan.Customer = customer;
+                    item.Loan.Customer = App.LibraryService.Customers.FirstOrDefault(x => x.Id == item.Loan.CustomerId);
                 }
-                item.Loan = loan;
             }
+
+            string search = Search?.ToLower();
+            items = items.Where(x => string.IsNullOrWhiteSpace(search) ||
+                               (x.Book?.Title != null && x.Book.Title.ToLower().Contains(search)) ||
+                               (x.Book?.Author != null && x.Book.Author.ToLower().Contains(search)) ||
+                               (x.ISBN != null && x.ISBN.ToLower().Contains(search)) ||
+                               (x.Supplied != null && x.Supplied.ToString(Constants.DateTimeUiFormat).ToLower().Contains(search)) ||
+                               (x.Loan?.Customer?.Username != null && x.Loan.Customer.Username.ToLower().Contains(search))).ToList();
+
             BookItems = new ObservableCollection<BookItem>(items);
         }
 
@@ -52,12 +74,20 @@ namespace PublicLibrary
 
             await DialogHost.Show(new BookItemDialog(bookItem), (s, e) =>
             {
-                if (Equals(e.Parameter, true))
+                try
                 {
-                    bookItem.Id = (App.LibraryService.Books.OrderByDescending(x => x.Id).FirstOrDefault()?.Id ?? 0) + 1;
-                    bookItem.BookId = bookItem.Book.Id;
-                    App.LibraryService.AddBookItem(bookItem);
-                    Load();
+                    if (Equals(e.Parameter, true))
+                    {
+                        bookItem.Id = (App.LibraryService.BookItems.OrderByDescending(x => x.Id).FirstOrDefault()?.Id ?? 0) + 1;
+                        bookItem.BookId = bookItem.Book.Id;
+                        bookItem.Supplied = DateTime.Now;
+                        App.LibraryService.AddBookItem(bookItem);
+                        Load();
+                    }
+                }
+                catch (Exception)
+                {
+                    e.Cancel();
                 }
             });
         }
